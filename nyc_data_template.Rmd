@@ -8,24 +8,60 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-library(ggplot2)
+library(ggplot2)    #do we need any other libraries?
 library(tidyverse)
 library(dplyr)
 ```
 
 ```{r}
-nyc <- read.csv(file = "priceIndex_All.csv", header = TRUE) +
+nyc_sale <- read.csv(file = "priceIndex_All.csv", header = TRUE)  #read in the data for both types
+
+nyc_rent <- read.csv(file = "rentalIndex_All.csv", header = TRUE)
 ```
 
 
+
 ```{r}
-nyc %>%   #note, this data is for sales.
+#setting types for each data set so when we join we can use type in the aesthetic
+nyc_sale <- nyc_sale %>% 
+  mutate(type = "sale")
+
+nyc_rent <- nyc_rent %>% 
+  mutate(type = "rental")
+
+#joining data
+
+nyc_tot <- nyc_sale %>% 
+  bind_rows(nyc_rent)
+```
+
+```{r}   
+nyc_rent %>%   
   filter(str_detect(Month, "2020")) %>% 
-  ggplot(aes(x= Month, y = NYC)) +
-  geom_line(aes(group = 1), color = "coral3") +
+  ggplot(aes(x= Month, y = NYC, color = type)) +
+ geom_line(aes(group = 1), color = "coral3") +
   geom_point() +
   labs(y= "Price Index???? CHECK ON THIS") +
   theme(panel.background = element_rect(fill = "gray80"))
+```
+```{r}   
+nyc_sale%>%   
+  filter(str_detect(Month, "2020")) %>% 
+  ggplot(aes(x= Month, y = NYC, color = type)) +
+ geom_line(aes(group = 1), color = "coral3") +
+  geom_point() +
+  labs(y= "Price Index???? CHECK ON THIS") +
+  theme(panel.background = element_rect(fill = "gray80"))
+```
 
+```{r}   
+#this needs a lot more work. We need to make it percentage change, instead of actual prices...
+nyc_tot %>%   
+  filter(str_detect(Month, "2020")) %>% 
+  ggplot(aes(x= Month, y = NYC, color = type)) +
+ # geom_line(aes(group = 2), color = "coral3") +
+  geom_point() +
+  labs(y= "Price Index???? CHECK ON THIS") +
+  theme(panel.background = element_rect(fill = "gray80"))
 ```
 
