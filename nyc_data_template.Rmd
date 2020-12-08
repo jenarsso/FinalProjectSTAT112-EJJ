@@ -1,0 +1,31 @@
+---
+title: "NYC_Template"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+```
+
+```{r}
+nyc <- read.csv(file = "priceIndex_All.csv", header = TRUE) +
+```
+
+
+```{r}
+nyc %>%   #note, this data is for sales.
+  filter(str_detect(Month, "2020")) %>% 
+  ggplot(aes(x= Month, y = NYC)) +
+  geom_line(aes(group = 1), color = "coral3") +
+  geom_point() +
+  labs(y= "Price Index???? CHECK ON THIS") +
+  theme(panel.background = element_rect(fill = "gray80"))
+
+```
+
